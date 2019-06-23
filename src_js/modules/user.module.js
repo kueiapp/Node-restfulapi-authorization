@@ -157,7 +157,7 @@ const selectSpecifiedUser =  function(insertValues)
                     user_email: result[0].user_email,
                     exp: Math.floor(Date.now() / 1000) + (60 * 15) // min
                   };
-                  // set API Token
+                  // create signature and generate Access-Token
                   const token = jwt.sign(payload, setting.config.privateKey,{
                       algorithm: 'HS256'
                   });

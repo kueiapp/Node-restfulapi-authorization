@@ -6,9 +6,10 @@ import articleModule from '../modules/article.module';
 const insertArticle = function(req, res)
 {
   const insertValues = req.body;
+  const token = req.token // from middleware
   console.log('insert an article:', JSON.stringify(insertValues) );
   // POST /api/article
-  articleModule.insertArticle(insertValues)
+  articleModule.insertArticle(insertValues, token)
   .then(function(result)
   {
     res.send(result);
@@ -22,7 +23,7 @@ const insertArticle = function(req, res)
 const getPersonalArticle = function(req, res)
 {
   // GET /api/article
-  const token = req.token
+  const token = req.token // from middleware
   articleModule.getPersonalArticle(token)
   .then(function(result)
   {

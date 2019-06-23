@@ -7,30 +7,39 @@ import {SqlError} from '../config/ErrorHandler.js'
 // token checking
 import jwt from 'jsonwebtoken';
 
-const insertArticle = function(insertValues)
+const insertArticle = function(insertValues,token)
 {
   return new Promise( function(resolve, reject)
   {
-    db.getConnection( function(connectionError, connection)
+    jwt.verify( token, setting.config.privateKey, function (err, payload)
     {
-      if (connectionError) {
-        console.error('connection error: ', connectionError);
-        reject(connectionError);
+      if (err) {
+        // return error on failed
+        reject(err);
       }
-      else {
-        connection.query('INSERT INTO news_list SET ?',[insertValues], function(error, result)
-        {
-          if (error) {
-            console.error('SQL error: ', new SqlError('Hey! I cannot insert the data').message );
-            reject(error);
-          }
-          else if (result.affectedRows === 1) {
-            resolve(`Insert successfully！`);
-          }
+      else{
+          db.getConnection( function(connectionError, connection)
+          {
+            if (connectionError) {
+              console.error('connection error: ', connectionError);
+              reject(connectionError);
+            }
+            else {
+              connection.query('INSERT INTO news_list SET ?',[insertValues], function(error, result)
+              {
+                if (error) {
+                  console.error('SQL error: ', new SqlError('Hey! I cannot insert the data').message );
+                  reject(error);
+                }
+                else if (result.affectedRows === 1) {
+                  resolve(`Insert successfully！`);
+                }
 
-          // release memory
-          connection.release();
-        });
+                // release memory
+                connection.release();
+              });
+            }
+          });
       }
     });
   });

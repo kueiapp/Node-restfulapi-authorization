@@ -26,7 +26,7 @@ router.route('/personal').get( ensureToken, articleCtrl.getPersonalArticle )
 /* /api/article  */
 router.route('/')
   .get( articleCtrl.getArticle )
-  .post( articleCtrl.insertArticle );
+  .post( ensureToken, articleCtrl.insertArticle );
 
 /* /api/article/:article_id,  article_id is a var  */
 router.route('/:article_id')
